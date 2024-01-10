@@ -8,23 +8,24 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 
 #### Alternative Idea ####
-# 1. Given some text from user, make a call to cohere language model api and ask it to make the statement more negative in connotation
+# 1. Given some text from user, make a call to cohere language model api and ask it to make the statement more negative in connotation (geenrate 5 samples)
 # 2. re-embed this text using cohere embed model
 # 3. visualize this more "negative" embedding in 3d space and compare it with original embedding (can try using PCA and t-SNE and see which gives better results)
+# 4. can also train a sentiment classifier to classify original statement as positive or negative and see if it matches similarity to samples generated with similar connotation
 
 class Visualizations():
 
-    def __init__(self, original_embedding, modified_embedding):
-        self.original_embedding = original_embedding
-        self.modified_embedding = modified_embedding
+    def __init__(self, data):
+        self.data = data
 
-    def principal_component_analysis(self):
-        pca = PCA(n_components=2)
-        og = pca.fit_transform(np.array([self.original_embedding]))
-        mod = pca.fit_transform(np.array([self.new_embedding]))
-        return [og, mod]
+    def principal_component_analysis(self, n):
+        pca = PCA(n_components=n)
+        m = np.array(self.data['Embedding'].tolist())
+        pc = pca.fit_transform(m)
+        return pc
 
-    # def stochastic_neighbords(self, )
+    # def stochastic_neighbords(self):
+
 
 
 

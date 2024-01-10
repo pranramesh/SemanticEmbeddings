@@ -30,11 +30,13 @@ co = cohere.Client("5vr3ldpOnOHoept93vDSgBPLGfqbZgBfnNeoaATZ")
 if text and option:
 
     response = co.generate(
-    prompt=f"Please make the following block of text sound {option}: {text}"
+    prompt=f"Please make the following block of text sound {option}: {text}",
+    num_generations=5
     )
 
+    #generate embeddings for original text and generated samples
     original_embedding = embeddings.embed_query(text)
-    new_embedding = embeddings.embed_query(response[0])
+    new_embeddings = [embeddings.embed_query(element) for element in response]
 
     ##### Container 2 #####
     container2 = st.container(border=True)
@@ -44,10 +46,11 @@ if text and option:
     ##### Container 3 #####
     container3 = st.container(border=True)
     container3.header("Visualization")
+    container3.caption(f"Synthetically generates more samples and visualizes spatial relatedness via PCA and t-SNE")
 
     #calculates cosin similarity
     e1 = np.array(original_embedding)
-    e2 = np.array(new_embedding)
+    e2 = np.array(new_embeddings[0])
     # Reshape the arrays to match the expected input shape of cosine_similarity
     e1_embedding = e1.reshape(1, -1)
     e2_embedding = e2.reshape(1, -1)
@@ -55,10 +58,26 @@ if text and option:
     similarity = cosine_similarity(e1_embedding, e2_embedding)[0][0]
     container3.write(f"Cosine similarity score: {similarity}")
 
-    #creates visualization for PCA
-    visualize = Visualizations(original_embedding, new_embedding)
-    principal_components = visualize.principal_component_analysis()
+    # creates dataframe for easy visualization
+    d = {
+        "Text": [text] + [element for element in response], 
+    "Embedding": [original_embedding] + new_embeddings
+    }
+    df = pd.DataFrame(data=d)
 
-    for i in principal_components:
-        fig = plt.scatter(i[:, 0], i[:, 1], label=(f'Original Embedding' if i == 0 else f'Modified Embedding'))
-        container3.pyplot(fig)
+    #creates visualization for PCA
+    container3.subheader(f"PCA")
+    #add option to visualize in 2d (pc2), 3d (pc3), or with heatmap (pc5)
+    visualize = Visualizations(df)
+    principal_components = visualize.principal_component_analysis(2)
+    df_pc2 = pd.concat([df, pd.DataFrame(principal_components)], axis=1)
+    container3.dataframe(df_pc2)
+    df_pc2.columns = df_pc2.columns.astype(str)
+    container3.scatter_chart(data=df_pc2, x='0', y='1')
+
+    # fig = plt.figure(figsize = (10, 7))
+    # ax = plt.axes(projection ="3d")
+ 
+    # # Creating plot
+    # ax.scatter3D(df_pc3['0'], df_pc3['1'], df_pc3['2'])
+    # container3.pyplot(fig=fig)
