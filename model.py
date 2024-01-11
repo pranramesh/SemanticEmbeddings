@@ -24,7 +24,11 @@ class Visualizations():
         pc = pca.fit_transform(m)
         return pc
 
-    # def stochastic_neighbords(self):
+    def stochastic_neighbors(self, n):
+        tsne = TSNE(n_components=n, random_state=0)
+        m = np.array(self.data['Embedding'].tolist())
+        tsne_data = tsne.fit_transform(m)
+        return tsne_data
 
 
 

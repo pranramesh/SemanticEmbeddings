@@ -46,7 +46,7 @@ if text and option:
     ##### Container 3 #####
     container3 = st.container(border=True)
     container3.header("Visualization")
-    container3.caption(f"Synthetically generates more samples and visualizes spatial relatedness via PCA and t-SNE")
+    container3.caption(f"Synthetically generates more samples and visualizes spatial relatedness via PCA")
 
     #calculates cosin similarity
     e1 = np.array(original_embedding)
@@ -75,9 +75,17 @@ if text and option:
     df_pc2.columns = df_pc2.columns.astype(str)
     container3.scatter_chart(data=df_pc2, x='0', y='1')
 
+    #creates visualization for t-SNE
+    # container3.subheader(f"t-SNE")
+    # tsne_d = visualize.stochastic_neighbors(2)
+    # df_tsne = pd.concat([df, pd.DataFrame(tsne_d)], axis=1)
+    # container3.dataframe(df_tsne)
+    # df_tsne.columns = df_tsne.columns.astype(str)
+    # container3.scatter_chart(data=df_tsne, x='0', y='1')
+
+
+    # # Creating 3d plot
     # fig = plt.figure(figsize = (10, 7))
     # ax = plt.axes(projection ="3d")
- 
-    # # Creating plot
     # ax.scatter3D(df_pc3['0'], df_pc3['1'], df_pc3['2'])
     # container3.pyplot(fig=fig)
