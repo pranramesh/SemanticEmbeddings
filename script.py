@@ -22,7 +22,7 @@ option = container1.selectbox(
 
 
 #initializing embedding model
-embeddings = CohereEmbeddings(model="embed-english-light-v3.0", cohere_api_key="5vr3ldpOnOHoept93vDSgBPLGfqbZgBfnNeoaATZ")
+embeddings = CohereEmbeddings(model="embed-english-light-v3.0", cohere_api_key="YOUR_KEY_HERE")
 
 #initializing language model
 co = cohere.Client("5vr3ldpOnOHoept93vDSgBPLGfqbZgBfnNeoaATZ")
